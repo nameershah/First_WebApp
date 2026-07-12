@@ -25,7 +25,6 @@
             perspective: 1000px;
         }
         
-        /* 3D Moving Grid Background */
         .grid-floor {
             position: absolute;
             bottom: -50%;
@@ -45,7 +44,6 @@
             100% { transform: rotateX(75deg) translateY(50px); }
         }
 
-        /* 3D HUD Container */
         .hud-wrapper {
             transition: transform 0.1s ease-out;
             transform-style: preserve-3d;
@@ -58,7 +56,7 @@
             padding: 35px;
             width: 500px;
             backdrop-filter: blur(10px);
-            transform: translateZ(50px); /* Pops out from the background */
+            transform: translateZ(50px);
         }
         h1 {
             text-align: center;
@@ -69,7 +67,6 @@
             margin-bottom: 30px;
         }
         
-        /* Inputs and Buttons */
         .input-group { display: flex; gap: 15px; margin-bottom: 30px; }
         input[type="text"] {
             flex: 1;
@@ -106,7 +103,6 @@
             transform: scale(1.05);
         }
         
-        /* Mission Log Items */
         .task-list { list-style: none; padding: 0; margin: 0; }
         .task-item {
             background: rgba(0, 243, 255, 0.05);
@@ -129,7 +125,6 @@
         .btn-status { color: var(--neon-cyan); font-size: 1.6rem; text-decoration: none; display: flex; transition: all 0.2s; }
         .btn-status:hover { text-shadow: 0 0 15px var(--neon-cyan); transform: scale(1.1); }
         
-        /* Mission Completed State */
         .completed { border-left-color: var(--neon-pink); background: rgba(255, 0, 234, 0.05); }
         .completed .btn-status { color: var(--neon-pink); }
         .completed .btn-status:hover { text-shadow: 0 0 15px var(--neon-pink); }
@@ -184,15 +179,12 @@
     </div>
 
     <script>
-        // 3D Parallax Mouse Tracking Effect
         const wrapper = document.getElementById('hudWrapper');
         document.addEventListener('mousemove', (e) => {
             const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
             const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
             wrapper.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
         });
-        
-        // Reset tilt position when mouse leaves the browser window
         document.addEventListener('mouseleave', () => {
             wrapper.style.transform = 'rotateY(0deg) rotateX(0deg)';
         });
