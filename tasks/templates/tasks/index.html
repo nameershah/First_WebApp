@@ -3,176 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Task Manager</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Cyber Task HUD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --danger: #ef4444;
-            --success: #10b981;
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff00ea;
+            --dark-bg: #050510;
         }
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
             margin: 0;
             min-height: 100vh;
+            background-color: var(--dark-bg);
+            color: var(--neon-cyan);
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            padding-top: 10vh;
-        }
-        .app-container {
-            background-color: var(--card-bg);
-            width: 100%;
-            max-width: 480px;
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .header {
-            display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 2rem;
+            perspective: 1000px;
         }
-        .header i { font-size: 2rem; color: var(--primary); }
-        h1 { margin: 0; font-weight: 600; font-size: 1.75rem; letter-spacing: -0.5px; }
         
-        .input-group {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 2rem;
+        /* 3D Moving Grid Background */
+        .grid-floor {
+            position: absolute;
+            bottom: -50%;
+            left: -50%;
+            width: 200%;
+            height: 150%;
+            background-image: 
+                linear-gradient(to right, rgba(0, 243, 255, 0.15) 1px, transparent 1px),
+                linear-gradient(to top, rgba(0, 243, 255, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: rotateX(75deg);
+            animation: gridMove 2s linear infinite;
+            z-index: -1;
         }
+        @keyframes gridMove {
+            0% { transform: rotateX(75deg) translateY(0); }
+            100% { transform: rotateX(75deg) translateY(50px); }
+        }
+
+        /* 3D HUD Container */
+        .hud-wrapper {
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+        }
+        .hud-container {
+            background: rgba(5, 5, 16, 0.85);
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2), inset 0 0 20px rgba(0, 243, 255, 0.1);
+            border-radius: 10px;
+            padding: 35px;
+            width: 500px;
+            backdrop-filter: blur(10px);
+            transform: translateZ(50px); /* Pops out from the background */
+        }
+        h1 {
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px var(--neon-cyan);
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+        
+        /* Inputs and Buttons */
+        .input-group { display: flex; gap: 15px; margin-bottom: 30px; }
         input[type="text"] {
             flex: 1;
-            background: #0f172a;
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 14px 18px;
-            border-radius: 12px;
-            color: white;
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid var(--neon-cyan);
+            color: #fff;
+            padding: 15px;
+            font-family: 'Orbitron', sans-serif;
             font-size: 1rem;
-            transition: all 0.3s ease;
-            font-family: inherit;
+            outline: none;
+            border-radius: 4px;
+            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
         }
         input[type="text"]:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 15px var(--neon-cyan), inset 0 0 15px var(--neon-cyan);
+            background: rgba(0, 243, 255, 0.1);
         }
-        .btn-add {
-            background: var(--primary);
-            color: white;
+        button {
+            background: var(--neon-cyan);
+            color: var(--dark-bg);
             border: none;
-            border-radius: 12px;
-            padding: 0 20px;
-            font-size: 1.25rem;
+            padding: 0 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.2rem;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+            text-transform: uppercase;
         }
-        .btn-add:hover { background: var(--primary-hover); transform: scale(1.05); }
+        button:hover {
+            background: #fff;
+            box-shadow: 0 0 20px var(--neon-cyan);
+            transform: scale(1.05);
+        }
         
-        .task-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+        /* Mission Log Items */
+        .task-list { list-style: none; padding: 0; margin: 0; }
         .task-item {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05);
-            padding: 16px 20px;
-            border-radius: 16px;
+            background: rgba(0, 243, 255, 0.05);
+            border-left: 4px solid var(--neon-cyan);
+            padding: 15px;
+            margin-bottom: 12px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            transition: all 0.2s ease;
+            align-items: center;
+            transition: all 0.2s;
         }
-        .task-item:hover { background: rgba(255,255,255,0.05); transform: translateY(-2px); }
-        
-        .task-content { display: flex; align-items: center; gap: 16px; flex: 1; }
-        .task-text { font-size: 1rem; font-weight: 500; transition: all 0.3s ease; }
-        
-        .btn-status {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 1.5rem;
-            display: flex;
-            transition: color 0.2s;
+        .task-item:hover {
+            background: rgba(0, 243, 255, 0.15);
+            transform: translateX(10px);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
         }
-        .btn-status:hover { color: var(--primary); }
-        .completed .btn-status { color: var(--success); }
-        .completed .task-text { text-decoration: line-through; color: var(--text-muted); }
+        .task-content { display: flex; align-items: center; gap: 15px; }
+        .task-text { color: #fff; letter-spacing: 1px; font-size: 0.95rem; }
+        
+        .btn-status { color: var(--neon-cyan); font-size: 1.6rem; text-decoration: none; display: flex; transition: all 0.2s; }
+        .btn-status:hover { text-shadow: 0 0 15px var(--neon-cyan); transform: scale(1.1); }
+        
+        /* Mission Completed State */
+        .completed { border-left-color: var(--neon-pink); background: rgba(255, 0, 234, 0.05); }
+        .completed .btn-status { color: var(--neon-pink); }
+        .completed .btn-status:hover { text-shadow: 0 0 15px var(--neon-pink); }
+        .completed .task-text { text-decoration: line-through; opacity: 0.5; }
         
         .btn-delete {
-            color: var(--text-muted);
+            color: var(--neon-pink);
+            font-size: 1.5rem;
             text-decoration: none;
-            font-size: 1.25rem;
-            opacity: 0;
-            transition: all 0.2s ease;
-            padding: 8px;
-            border-radius: 8px;
+            opacity: 0.3;
+            transition: all 0.2s;
         }
         .task-item:hover .btn-delete { opacity: 1; }
-        .btn-delete:hover { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem 0;
-            color: var(--text-muted);
-        }
-        .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
-        .empty-state p { margin: 0; font-size: 0.95rem; font-weight: 500; }
+        .btn-delete:hover { text-shadow: 0 0 15px var(--neon-pink); transform: scale(1.2); color: #fff; }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-            <span style="color: #94a3b8; font-size: 0.95rem;">Hi, <strong>{{ request.user.username }}</strong></span>
-            <form method="POST" action="{% url 'logout' %}" style="margin: 0;">
+    <div class="grid-floor"></div>
+    
+    <div class="hud-wrapper" id="hudWrapper">
+        <div class="hud-container">
+            <h1>Mission Log</h1>
+            <form method="POST" class="input-group">
                 {% csrf_token %}
-                <button type="submit" style="background: none; border: none; color: #ef4444; font-family: inherit; font-weight: 600; cursor: pointer; padding: 0;">Log Out</button>
+                <input type="text" name="title" placeholder="ENTER OBJECTIVE..." required autocomplete="off">
+                <button type="submit">ADD</button>
             </form>
-        </div>        <div class="header">
-            <i class="ph-fill ph-check-square-offset"></i>
-            <h1>Tasks</h1>
-        </div>
-
-        <form method="POST" class="input-group">
-            {% csrf_token %}
-            <input type="text" name="title" placeholder="Write a new task..." required autocomplete="off">
-            <button type="submit" class="btn-add"><i class="ph-bold ph-plus"></i></button>
-        </form>
-
-        <ul class="task-list">
-            {% for task in tasks %}
-            <li class="task-item {% if task.completed %}completed{% endif %}">
-                <div class="task-content">
-                    <a href="{% url 'toggle_task' task.id %}" class="btn-status">
-                        {% if task.completed %}
-                            <i class="ph-fill ph-check-circle"></i>
-                        {% else %}
-                            <i class="ph ph-circle"></i>
-                        {% endif %}
+            <ul class="task-list">
+                {% for task in tasks %}
+                <li class="task-item {% if task.completed %}completed{% endif %}">
+                    <div class="task-content">
+                        <a href="{% url 'toggle_task' task.id %}" class="btn-status">
+                            {% if task.completed %}
+                                <i class="ph-fill ph-check-circle"></i>
+                            {% else %}
+                                <i class="ph ph-circle"></i>
+                            {% endif %}
+                        </a>
+                        <span class="task-text">{{ task.title }}</span>
+                    </div>
+                    <a href="{% url 'delete_task' task.id %}" class="btn-delete">
+                        <i class="ph-bold ph-x-square"></i>
                     </a>
-                    <span class="task-text">{{ task.title }}</span>
+                </li>
+                {% empty %}
+                <div style="text-align: center; padding: 20px; color: rgba(0, 243, 255, 0.4);">
+                    <p>NO ACTIVE MISSIONS IN SECTOR.</p>
                 </div>
-                <a href="{% url 'delete_task' task.id %}" class="btn-delete" title="Delete Task">
-                    <i class="ph-bold ph-trash"></i>
-                </a>
-            </li>
-            {% empty %}
-            <div class="empty-state">
-                <i class="ph-duotone ph-coffee"></i>
-                <p>You're all caught up! Time to relax.</p>
-            </div>
-            {% endfor %}
-        </ul>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
+
+    <script>
+        // 3D Parallax Mouse Tracking Effect
+        const wrapper = document.getElementById('hudWrapper');
+        document.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            wrapper.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+        
+        // Reset tilt position when mouse leaves the browser window
+        document.addEventListener('mouseleave', () => {
+            wrapper.style.transform = 'rotateY(0deg) rotateX(0deg)';
+        });
+    </script>
 </body>
 </html>
