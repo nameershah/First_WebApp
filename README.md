@@ -19,3 +19,7 @@ The interface is built around a "Heads Up Display" (HUD) concept, utilizing glas
 ## License
 
 This project is proprietary. It is strictly for visual portfolio display only. Downloading, copying, modifying, distributing, or running this software is prohibited. Please refer to the [LICENSE](LICENSE) file for complete terms and conditions.
+
+## User Interface
+
+![Cyber Task HUD](screenshot.png)
