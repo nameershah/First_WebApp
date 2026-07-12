@@ -132,7 +132,13 @@
 </head>
 <body>
     <div class="app-container">
-        <div class="header">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <span style="color: #94a3b8; font-size: 0.95rem;">Hi, <strong>{{ request.user.username }}</strong></span>
+            <form method="POST" action="{% url 'logout' %}" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" style="background: none; border: none; color: #ef4444; font-family: inherit; font-weight: 600; cursor: pointer; padding: 0;">Log Out</button>
+            </form>
+        </div>        <div class="header">
             <i class="ph-fill ph-check-square-offset"></i>
             <h1>Tasks</h1>
         </div>
